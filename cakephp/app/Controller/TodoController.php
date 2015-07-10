@@ -18,8 +18,6 @@ class TodoController extends AppController {
 	}
 
 	public function run_login() {
-		var_dump($this->account_tbs->find('first',array('conditions' => array('id' => $this->request->data['id'],'pass' => $this->request->data['pass'])))['account_tbs']['name']);
-		exit;
 		$this->loadModel('account_tbs');
 		if($this->account_tbs->find('first',array('conditions' => array('id' => $this->request->data['id'],'pass' => $this->request->data['pass'])))){
 			
@@ -36,18 +34,20 @@ class TodoController extends AppController {
 	}
 
 	public function show_main($where = 1) {
-		var_dump($where);
 		$this->loadModel('task_tbs');
 		if($where != 1){
 			$conditions = array();
 			$conditions += $where;
-			$conditions += array('account_id' => 1);
+			$conditions += array('account_id' => CakeSession::read('account_id'));
+			$conditions += array('completion' => 1);
 
 		}else{
-			$conditions = array('account_id' => 1);
+			$conditions = array('account_id' => CakeSession::read('account_id'));
+			$conditions += array('completion' => 1);
 		}
+		$order = array('date' => 'ASC');
 
-		$this->set('task_data',$this->render_data($this->task_tbs->find('all',array('conditions' => $conditions))));
+		$this->set('task_data',$this->render_data($this->task_tbs->find('all',array('conditions' => $conditions, 'order' => $order))));
 
 		$this->loadModel('project_tbs');
 		$this->set('project_data',$this->project_tbs->find('all'));
@@ -167,6 +167,7 @@ class TodoController extends AppController {
 						'account_id' => 1,
 						'project_id' => $this->request->data['project_id'],
 						'label_id' => $this->request->data['label_id'],
+						'completion' => 1
 						//fileは保留
 					);
 
@@ -195,6 +196,22 @@ class TodoController extends AppController {
 
 	}
 
+	public function check_comp(){
+		$this->loadModel('task_tbs');
+		$this->autoRender = FALSE;
+		$data = array(	'id' => $this->request->data['task_id'],
+						'completion' => 0
+					 );
+
+		$this->task_tbs->set($data);
+		if($this->task_tbs->save()){
+			return json_encode(true);
+		}else{
+			return json_encode(false);
+		}
+
+
+	}
 
 }
 

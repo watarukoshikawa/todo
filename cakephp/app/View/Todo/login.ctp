@@ -1,3 +1,10 @@
+<style type="text/css">
+	div#main_area{
+		width: 300px;
+		margin: 0 auto;
+	}
+</style>
+
 <?php
 	if (isset($msg) && $msg != "") {
 		echo $msg;

@@ -1,3 +1,22 @@
+<style type="text/css">
+	div#main_area{
+		width: 400px;
+		margin: 0 auto;
+	}
+	div#text_area{
+		float: left;
+	}
+	div#button_area{
+		float: right;
+		margin-right: 18px;
+	}
+</style>
+
+<?php
+	if (isset($msg) && $msg != "") {
+		echo $msg;
+	}
+?>
 <div id="main_area">
 	<div id="hedder">
 		<div id="text_area">
@@ -11,20 +30,25 @@
 	</div>
 	<div id="form_area">
 		<form action="/todo/cakephp/todo/regist_label" method="POST">
-			<input type="text" name="title">
-			<input type="submit" value="登録">
+			<table>
+				<tbody>
+					<tr>
+						<td><input type="text" name="title"></td>
+						<td><input type="submit" value="登録"></td>
+					</tr>
+				</tbody>
+			</table>
 		</form>
 	</div>
 	<div id="data_area">
 		<table>
 			<tbody>
-			<?php var_dump($data); ?>
 				<?php foreach ($data as $key => $value): ?>
 					<tr>
 						<td>
 							<?php echo $value['label_tbs']['title'] ?>
 						</td>
-						<td>
+						<td style="width:77px;">
 							<form action="/todo/cakephp/todo/delete" method="POST">
 								<input type="hidden" name="filed" value="label_tbs">
 								<input type="hidden" name="id" value="<?php echo $value['label_tbs']['id']?>" >
